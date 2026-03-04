@@ -310,7 +310,7 @@ export default function ExoplanetDashboard() {
     try {
       const payload = {};
       Object.entries(values).forEach(([k, v]) => { payload[k] = parseFloat(v); });
-      const res = await fetch("http://127.0.0.1:8000/predict", {
+      const res = await fetch("https://steller-backend.onrender.com/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
