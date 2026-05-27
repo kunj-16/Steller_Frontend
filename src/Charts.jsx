@@ -1,38 +1,62 @@
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Cell, RadialBarChart, RadialBar, Legend,
+  ResponsiveContainer, Cell,
 } from "recharts";
 
 const REFERENCE_RADIUS = 2.26;
 
-// ─── Probability Bar Chart ────────────────────────────────────────────────────
 export function ProbabilityBarChart({ probability, habitabilityClass }) {
-  const isHabitable = habitabilityClass === "Habitable";
-  const color = isHabitable ? "#00ff80" : "#ff4a6e";
+  const isConfirmed = habitabilityClass === "Confirmed";
   const pct = Math.round(probability * 100);
 
   const data = [
-    { name: "Habitable", value: pct, fill: isHabitable ? "#00ff80" : "#1a3a2a" },
-    { name: "Non-Habitable", value: 100 - pct, fill: !isHabitable ? "#ff4a6e" : "#3a1a24" },
+    { name: "Confirmed", value: pct, fill: isConfirmed ? "#06d6ff" : "#4f46e5" },
+    { name: "False Positive", value: 100 - pct, fill: !isConfirmed ? "#ef4444" : "#4f46e5" },
   ];
 
   return (
     <div style={styles.chartCard}>
-      <h4 style={styles.chartTitle}>Habitability Probability</h4>
-      <p style={styles.chartDesc}>Predicted class confidence breakdown</p>
-      <ResponsiveContainer width="100%" height={160}>
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barSize={36}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-          <XAxis dataKey="name" tick={{ fill: "#4a8fb5", fontSize: 10, fontFamily: "Rajdhani" }} axisLine={false} tickLine={false} />
-          <YAxis domain={[0, 100]} tick={{ fill: "#2a6080", fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}%`} />
-          <Tooltip
-            contentStyle={{ background: "#041420", border: "1px solid rgba(0,229,255,0.2)", borderRadius: "8px", fontFamily: "Rajdhani", fontSize: "12px", color: "#c8e6f5" }}
-            formatter={(val) => [`${val}%`, "Probability"]}
-            cursor={{ fill: "rgba(0,229,255,0.03)" }}
+      <h4 style={styles.chartTitle}>Habitability Distribution</h4>
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 40 }}>
+          <defs>
+            <linearGradient id="gradient1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#06d6ff" stopOpacity={0.8} />
+              <stop offset="100%" stopColor="#06d6ff" stopOpacity={0.3} />
+            </linearGradient>
+            <linearGradient id="gradient2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
+              <stop offset="100%" stopColor="#ef4444" stopOpacity={0.3} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="0" stroke="rgba(99, 102, 241, 0.1)" vertical={false} />
+          <XAxis 
+            dataKey="name" 
+            tick={{ fill: "#a5b4fc", fontSize: 11 }} 
+            axisLine={false} 
+            tickLine={false} 
+            angle={-15}
+            textAnchor="end"
+            height={60}
           />
-          <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-            {data.map((entry, i) => (
-              <Cell key={i} fill={entry.fill} />
+          <YAxis 
+            tick={{ fill: "#a5b4fc", fontSize: 11 }} 
+            axisLine={false} 
+            tickLine={false} 
+            tickFormatter={(v) => `${v}%`}
+          />
+          <Tooltip
+            contentStyle={{
+              background: "rgba(15, 23, 42, 0.95)",
+              border: "1px solid rgba(99, 102, 241, 0.3)",
+              borderRadius: "8px",
+              color: "#e0e7ff",
+            }}
+            formatter={(val) => [`${val}%`, "Probability"]}
+          />
+          <Bar dataKey="value" radius={[8, 8, 0, 0]}>
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.fill} />
             ))}
           </Bar>
         </BarChart>
@@ -41,30 +65,55 @@ export function ProbabilityBarChart({ probability, habitabilityClass }) {
   );
 }
 
-// ─── Prediction Comparison Chart ──────────────────────────────────────────────
 export function ComparisonChart({ predictedRadius }) {
   const data = [
-    { name: "Predicted", radius: parseFloat(predictedRadius.toFixed(3)) },
-    { name: "Dataset Avg", radius: REFERENCE_RADIUS },
+    { name: "Your Prediction", value: parseFloat(predictedRadius.toFixed(3)) },
+    { name: "Dataset Average", value: REFERENCE_RADIUS },
   ];
 
   return (
     <div style={styles.chartCard}>
-      <h4 style={styles.chartTitle}>Radius Comparison</h4>
-      <p style={styles.chartDesc}>Predicted vs. dataset reference ({REFERENCE_RADIUS} R⊕)</p>
-      <ResponsiveContainer width="100%" height={160}>
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} barSize={36}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-          <XAxis dataKey="name" tick={{ fill: "#4a8fb5", fontSize: 10, fontFamily: "Rajdhani" }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: "#2a6080", fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}R⊕`} />
-          <Tooltip
-            contentStyle={{ background: "#041420", border: "1px solid rgba(0,229,255,0.2)", borderRadius: "8px", fontFamily: "Rajdhani", fontSize: "12px", color: "#c8e6f5" }}
-            formatter={(val) => [`${val} R⊕`, "Radius"]}
-            cursor={{ fill: "rgba(0,229,255,0.03)" }}
+      <h4 style={styles.chartTitle}>Planetary Radius Comparison</h4>
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 40 }}>
+          <defs>
+            <linearGradient id="gradient3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#06d6ff" stopOpacity={0.8} />
+              <stop offset="100%" stopColor="#06d6ff" stopOpacity={0.3} />
+            </linearGradient>
+            <linearGradient id="gradient4" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.8} />
+              <stop offset="100%" stopColor="#a78bfa" stopOpacity={0.3} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="0" stroke="rgba(99, 102, 241, 0.1)" vertical={false} />
+          <XAxis 
+            dataKey="name" 
+            tick={{ fill: "#a5b4fc", fontSize: 11 }} 
+            axisLine={false} 
+            tickLine={false}
+            angle={-15}
+            textAnchor="end"
+            height={60}
           />
-          <Bar dataKey="radius" radius={[6, 6, 0, 0]}>
-            <Cell fill="#4ab8ff" />
-            <Cell fill="#ff9d4a" />
+          <YAxis 
+            tick={{ fill: "#a5b4fc", fontSize: 11 }} 
+            axisLine={false} 
+            tickLine={false} 
+            tickFormatter={(v) => `${v}R⊕`}
+          />
+          <Tooltip
+            contentStyle={{
+              background: "rgba(15, 23, 42, 0.95)",
+              border: "1px solid rgba(99, 102, 241, 0.3)",
+              borderRadius: "8px",
+              color: "#e0e7ff",
+            }}
+            formatter={(val) => [`${val} R⊕`, "Radius"]}
+          />
+          <Bar dataKey="value" radius={[8, 8, 0, 0]}>
+            <Cell fill="url(#gradient3)" />
+            <Cell fill="url(#gradient4)" />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
@@ -72,49 +121,68 @@ export function ComparisonChart({ predictedRadius }) {
   );
 }
 
-// ─── Confidence Progress Bar ───────────────────────────────────────────────────
-export function ConfidenceBar({ probability, habitabilityClass }) {
-  const isHabitable = habitabilityClass === "Habitable";
+export function ConfidenceRing({ probability, habitabilityClass }) {
+  const isConfirmed = habitabilityClass === "Confirmed";
   const pct = Math.round(probability * 100);
-  const color = isHabitable ? "#00ff80" : "#ff4a6e";
-  const bgColor = isHabitable ? "rgba(0,255,128,0.08)" : "rgba(255,74,110,0.08)";
+  const color = isConfirmed ? "#06d6ff" : "#ef4444";
+
+  const confidenceLevel =
+    pct >= 80 ? "Very High" : pct >= 60 ? "High" : pct >= 40 ? "Moderate" : "Low";
+
+  const circumference = 2 * Math.PI * 45;
+  const offset = circumference - (pct / 100) * circumference;
 
   return (
     <div style={styles.chartCard}>
       <h4 style={styles.chartTitle}>Confidence Meter</h4>
-      <p style={styles.chartDesc}>Overall model confidence in prediction</p>
-
-      <div style={styles.confMeterWrap}>
-        <div style={{ ...styles.confLabelRow }}>
-          <span style={{ ...styles.confLabel, color }}>
-            {isHabitable ? "HABITABLE" : "NON-HABITABLE"}
-          </span>
-          <span style={{ ...styles.confPct, color }}>{pct}%</span>
-        </div>
-
-        <div style={styles.progressTrack}>
-          <div
+      
+      <div style={styles.ringContainer}>
+        <svg style={styles.ringSvg} viewBox="0 0 100 100">
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            fill="none"
+            stroke="rgba(99, 102, 241, 0.2)"
+            strokeWidth="8"
+          />
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            fill="none"
+            stroke={color}
+            strokeWidth="8"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
             style={{
-              ...styles.progressFill,
-              width: `${pct}%`,
-              background: `linear-gradient(90deg, ${isHabitable ? "#00cc66, #00ff80" : "#cc2244, #ff4a6e"})`,
-              boxShadow: `0 0 12px ${color}55`,
+              transform: "rotate(-90deg)",
+              transformOrigin: "50px 50px",
+              transition: "stroke-dashoffset 1.5s ease-out",
             }}
           />
-          {/* Tick marks */}
-          {[25, 50, 75].map(tick => (
-            <div key={tick} style={{ ...styles.tick, left: `${tick}%` }} />
-          ))}
-        </div>
+          <text
+            x="50"
+            y="50"
+            textAnchor="middle"
+            dy="0.3em"
+            style={{
+              fontSize: "24px",
+              fontWeight: 700,
+              fill: color,
+            }}
+          >
+            {pct}%
+          </text>
+        </svg>
+      </div>
 
-        <div style={styles.tickLabels}>
-          <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
-        </div>
-
-        {/* Descriptor */}
-        <div style={{ ...styles.confChip, background: bgColor, border: `1px solid ${color}44`, color }}>
-          {pct >= 80 ? "Very High Confidence" : pct >= 60 ? "High Confidence" : pct >= 40 ? "Moderate Confidence" : "Low Confidence"}
-        </div>
+      <div style={styles.ringInfo}>
+        <p style={styles.confidenceLabel}>{confidenceLevel} Confidence</p>
+        <p style={styles.confidenceDesc}>
+          {isConfirmed ? "Likely Confirmed Exoplanet" : "Possible False Positive"}
+        </p>
       </div>
     </div>
   );
@@ -122,83 +190,48 @@ export function ConfidenceBar({ probability, habitabilityClass }) {
 
 const styles = {
   chartCard: {
-    background: "rgba(0,15,35,0.5)",
-    border: "1px solid rgba(255,255,255,0.06)",
-    borderRadius: "14px",
-    padding: "1.25rem",
+    padding: "1.5rem",
+    background: "rgba(99, 102, 241, 0.05)",
+    border: "1px solid rgba(99, 102, 241, 0.2)",
+    borderRadius: "12px",
     marginBottom: "1rem",
+    transition: "all 0.3s ease",
   },
+
   chartTitle: {
-    fontFamily: "'Orbitron', monospace",
-    fontSize: "0.72rem",
-    fontWeight: 700,
-    color: "#c8e6f5",
-    letterSpacing: "0.08em",
-    marginBottom: "3px",
+    fontSize: "0.95rem",
+    fontWeight: 600,
+    color: "#c7d2fe",
+    margin: "0 0 1rem 0",
     textTransform: "uppercase",
+    letterSpacing: "0.5px",
   },
-  chartDesc: {
-    fontSize: "0.72rem",
-    color: "#3a6a85",
-    marginBottom: "1rem",
-  },
-  confMeterWrap: {
+
+  ringContainer: {
     display: "flex",
-    flexDirection: "column",
-    gap: "8px",
+    justifyContent: "center",
+    marginBottom: "1.5rem",
   },
-  confLabelRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+
+  ringSvg: {
+    width: "150px",
+    height: "150px",
   },
-  confLabel: {
-    fontFamily: "'Orbitron', monospace",
-    fontSize: "0.7rem",
+
+  ringInfo: {
+    textAlign: "center",
+  },
+
+  confidenceLabel: {
+    fontSize: "1rem",
     fontWeight: 700,
-    letterSpacing: "0.1em",
+    color: "#c7d2fe",
+    margin: "0 0 0.25rem 0",
   },
-  confPct: {
-    fontFamily: "'Orbitron', monospace",
-    fontSize: "1.4rem",
-    fontWeight: 900,
-  },
-  progressTrack: {
-    position: "relative",
-    height: "12px",
-    background: "rgba(255,255,255,0.05)",
-    borderRadius: "6px",
-    overflow: "visible",
-    border: "1px solid rgba(255,255,255,0.06)",
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: "6px",
-    transition: "width 1s cubic-bezier(0.4, 0, 0.2, 1)",
-  },
-  tick: {
-    position: "absolute",
-    top: "-4px",
-    width: "1px",
-    height: "20px",
-    background: "rgba(255,255,255,0.08)",
-    transform: "translateX(-50%)",
-  },
-  tickLabels: {
-    display: "flex",
-    justifyContent: "space-between",
-    fontSize: "0.65rem",
-    color: "#2a5070",
-    marginTop: "4px",
-  },
-  confChip: {
-    display: "inline-block",
-    borderRadius: "20px",
-    padding: "5px 14px",
-    fontSize: "0.72rem",
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    alignSelf: "flex-start",
-    marginTop: "4px",
+
+  confidenceDesc: {
+    fontSize: "0.8rem",
+    color: "#a5b4fc",
+    margin: 0,
   },
 };
