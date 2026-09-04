@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <radialGradient id="starGlow" cx="40%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#f5c08a"/>
+      <stop offset="50%" stop-color="#e8945a"/>
+      <stop offset="85%" stop-color="#d4844a"/>
+      <stop offset="100%" stop-color="#8c471c"/>
+    </radialGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5c08a" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#d4844a" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#e8945a" stop-opacity="0.8"/>
+    </linearGradient>
+    <radialGradient id="planetBody" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#2a2521"/>
+      <stop offset="70%" stop-color="#141210"/>
+      <stop offset="100%" stop-color="#0a0908"/>
+    </radialGradient>
+  </defs>
+  <!-- Background Dark Disc -->
+  <circle cx="32" cy="32" r="30" fill="#0d0d0f" stroke="rgba(212, 132, 74, 0.35)" stroke-width="1.5"/>
+  <!-- Stellar Atmosphere Glow -->
+  <circle cx="32" cy="32" r="21" fill="none" stroke="rgba(232, 148, 90, 0.25)" stroke-width="3"/>
+  <!-- Central Glowing Stellar Core -->
+  <circle cx="32" cy="32" r="15" fill="url(#starGlow)"/>
+  <!-- Tilted Orbital Ring -->
+  <ellipse cx="32" cy="32" rx="25" ry="9.5" transform="rotate(-25 32 32)" fill="none" stroke="url(#ringGrad)" stroke-width="1.8"/>
+  <!-- Transiting Exoplanet Silhouette -->
+  <circle cx="43" cy="24" r="5.5" fill="url(#planetBody)" stroke="#d4844a" stroke-width="1.2"/>
+</svg>
