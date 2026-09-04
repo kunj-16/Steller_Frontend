@@ -1,0 +1,392 @@
+/* ============================================================
+   Prediction Form Styling (Reference: stellerForm.css)
+   ============================================================ */
+
+.sf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+}
+
+/* ─────────────────────────────────────────────
+   Group / Section Card
+   ───────────────────────────────────────────── */
+.sf-group {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 132, 74, 0.13);
+  border-radius: 14px;
+  overflow: visible;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.sf-group:hover {
+  border-color: rgba(212, 132, 74, 0.28);
+}
+
+/* Group head */
+.sf-group-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(212, 132, 74, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 14px 14px 0 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* "01" / "02" / "03" tag */
+.sf-group-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-copper);
+  background: rgba(212, 132, 74, 0.1);
+  border: 1px solid rgba(212, 132, 74, 0.22);
+  border-radius: 6px;
+  padding: 3px 7px;
+  line-height: 1.4;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sf-group-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.sf-group-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: #f5f0e8;
+}
+
+.sf-group-desc {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.sf-group-chevron {
+  font-size: 0.7rem;
+  color: var(--accent-copper);
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+  margin-top: 5px;
+}
+
+.sf-group-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ─────────────────────────────────────────────
+   Fields Grid / Wrap
+   ───────────────────────────────────────────── */
+.sf-fields {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.6rem 0.75rem;
+  gap: 0;
+}
+
+/* ─────────────────────────────────────────────
+   Feature Input Card (.fi-root)
+   ───────────────────────────────────────────── */
+.fi-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1 1 180px;
+  max-width: 100%;
+  padding: 0.75rem 0.85rem;
+  margin: 0.3rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 132, 74, 0.1);
+  border-radius: 10px;
+  transition: background 150ms ease, border-color 150ms ease;
+  overflow: visible;
+  position: relative;
+}
+
+.fi-root:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(212, 132, 74, 0.25);
+}
+
+.fi-root--error {
+  border-color: rgba(224, 107, 74, 0.5);
+  background: rgba(224, 107, 74, 0.04);
+}
+
+/* Label row */
+.fi-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  min-height: 1.2rem;
+}
+
+.fi-label {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #d6c9b4;
+  line-height: 1.2;
+  cursor: default;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Right side: unit + tooltip */
+.fi-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.fi-unit {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-highlight);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Tooltip button */
+.fi-tip-anchor {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fi-tip-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  color: rgba(240, 236, 228, 0.4);
+  border-radius: 50%;
+  line-height: 0;
+  transition: color 140ms ease, transform 140ms ease;
+}
+
+.fi-tip-btn:hover,
+.fi-tip-btn--active {
+  color: var(--accent-copper);
+  transform: scale(1.15);
+}
+
+/* Tooltip bubble */
+.fi-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: -6px;
+  width: 240px;
+  background: #1c1a17;
+  border: 1px solid rgba(212, 132, 74, 0.35);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: #ede5d8;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75), inset 0 0 0 1px rgba(212, 132, 74, 0.08);
+  z-index: 500;
+  animation: fi-tip-in 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fi-tooltip-arrow {
+  position: absolute;
+  bottom: -5px;
+  right: 10px;
+  width: 9px;
+  height: 9px;
+  background: #1c1a17;
+  border-right: 1px solid rgba(212, 132, 74, 0.35);
+  border-bottom: 1px solid rgba(212, 132, 74, 0.35);
+  transform: rotate(45deg);
+}
+
+/* Input element */
+.fi-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 132, 74, 0.2);
+  border-radius: 7px;
+  color: #f8f4ee;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.5rem 0.7rem;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+  -moz-appearance: textfield;
+}
+
+.fi-input:hover {
+  border-color: rgba(212, 132, 74, 0.42);
+}
+
+.fi-input:focus {
+  border-color: var(--accent-copper);
+  background: rgba(212, 132, 74, 0.08);
+  box-shadow: 0 0 0 3px rgba(212, 132, 74, 0.16);
+}
+
+.fi-input::placeholder {
+  color: rgba(240, 236, 228, 0.25);
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────────
+   Form Alert / Messages
+   ───────────────────────────────────────────── */
+.sf-alert {
+  padding: 0.85rem 1.1rem;
+  background: rgba(224, 107, 74, 0.08);
+  border: 1px solid rgba(224, 107, 74, 0.3);
+  border-radius: 10px;
+  color: #fca58e;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.sf-alert-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  color: var(--color-false);
+}
+
+/* ─────────────────────────────────────────────
+   Footer Actions
+   ───────────────────────────────────────────── */
+.sf-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.sf-btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(212, 132, 74, 0.25);
+  border-radius: 9px;
+  color: rgba(240, 236, 228, 0.65);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.65rem 1.35rem;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+.sf-btn-ghost:hover:not(:disabled) {
+  border-color: rgba(212, 132, 74, 0.5);
+  color: #f5f0e8;
+  background: rgba(212, 132, 74, 0.05);
+}
+
+.sf-btn-ghost:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.sf-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: var(--accent-copper);
+  border: none;
+  border-radius: 9px;
+  color: #0d0d0f;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.7rem 1.85rem;
+  cursor: pointer;
+  transition: opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  box-shadow: 0 0 0 0 rgba(212, 132, 74, 0.3);
+}
+
+.sf-btn-primary:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(212, 132, 74, 0.35);
+}
+
+.sf-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.sf-btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Spinner inside button */
+.sf-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(13, 13, 15, 0.25);
+  border-top-color: #0d0d0f;
+  border-radius: 50%;
+  animation: sf-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes sf-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fi-tip-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .sf-fields {
+    padding: 0.35rem 0.4rem 0.6rem;
+  }
+
+  .fi-root {
+    flex: 1 1 140px;
+    margin: 0.25rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .sf-footer {
+    flex-direction: column-reverse;
+    gap: 0.6rem;
+  }
+
+  .sf-btn-ghost,
+  .sf-btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}

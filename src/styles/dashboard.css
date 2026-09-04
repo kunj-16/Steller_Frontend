@@ -1,0 +1,194 @@
+/* ============================================================
+   Dashboard Layout & Shell
+   ============================================================ */
+
+.app-container {
+  padding: 48px 36px 64px;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────────
+   Page Header
+   ───────────────────────────────────────────── */
+.page-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+/* Eyebrow - "Kepler Object of Interest · Classifier" */
+.page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-copper);
+  opacity: 0.95;
+  margin-bottom: 18px;
+}
+
+.page-eyebrow-line {
+  display: block;
+  width: 36px;
+  height: 1px;
+  background: var(--accent-copper);
+  opacity: 0.55;
+}
+
+/* Main title */
+.page-title {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  margin: 0 0 18px;
+  color: #f5f0e8;
+}
+
+.page-title em {
+  font-style: normal;
+  font-weight: 600;
+  background: linear-gradient(100deg, var(--accent-highlight), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtitle */
+.page-subtitle {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* ─────────────────────────────────────────────
+   Main 2-Column Grid
+   ───────────────────────────────────────────── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ─────────────────────────────────────────────
+   Glass Panels
+   ───────────────────────────────────────────── */
+.left-panel,
+.right-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 28px 30px;
+  border-radius: 18px;
+  box-shadow: var(--panel-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+}
+
+.left-panel:hover,
+.right-panel:hover {
+  transform: translateY(-3px);
+  border-color: var(--panel-border-hover);
+  box-shadow: var(--panel-shadow-hover);
+}
+
+/* ─────────────────────────────────────────────
+   Panel Section Head (Badge + Title + Subtitle)
+   ───────────────────────────────────────────── */
+.panel-section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(212, 132, 74, 0.12);
+}
+
+/* "01" / "02" badge */
+.panel-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-copper);
+  background: rgba(212, 132, 74, 0.1);
+  border: 1px solid rgba(212, 132, 74, 0.25);
+  border-radius: 6px;
+  padding: 4px 8px;
+  line-height: 1;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.panel-head-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Section title */
+.panel-section-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: #f0ece4;
+}
+
+/* Section description */
+.panel-section-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+/* ─────────────────────────────────────────────
+   Responsive Breakpoints
+   ───────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .app-container {
+    padding: 36px 20px 48px;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .left-panel,
+  .right-panel {
+    padding: 22px 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .page-title {
+    font-size: 1.85rem;
+  }
+
+  .page-eyebrow {
+    font-size: 0.62rem;
+  }
+
+  .page-eyebrow-line {
+    width: 24px;
+  }
+
+  .app-container {
+    padding: 24px 14px 36px;
+  }
+}

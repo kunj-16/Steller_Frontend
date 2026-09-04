@@ -1,257 +1,259 @@
+import React from "react";
+
 export default function DataVisualization({ result, loading }) {
-  return (
-    <div style={styles.container}>
-      {loading ? (
-        <LoadingState />
-      ) : result ? (
-        <ResultVisualization result={result} />
-      ) : (
-        <EmptyState />
-      )}
-      <style>{styles.keyframes}</style>
-    </div>
-  );
-}
+  if (loading) {
+    return (
+      <div className="viz-card" style={{ alignItems: "center", justifyContent: "center", minHeight: "240px" }}>
+        <div className="rp-loading-rings">
+          <span /><span /><span />
+        </div>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", margin: 0 }}>
+          Synthesizing planetary model...
+        </p>
+      </div>
+    );
+  }
 
-function LoadingState() {
-  return (
-    <div style={styles.centerContent}>
-      <div style={styles.spinner} />
-      <p style={styles.loadingText}>Analyzing exoplanet data...</p>
-    </div>
-  );
-}
+  if (!result) return null;
 
-function EmptyState() {
-  return (
-    <div style={styles.centerContent}>
-      <div style={styles.emptyIcon}>🔭</div>
-      <p style={styles.emptyText}>Enter parameters and run prediction</p>
-    </div>
-  );
-}
-
-function ResultVisualization({ result }) {
   const isHabitable = result.habitability_class === "Confirmed";
-  const confidence = Math.round(result.habitability_probability * 100);
+  const confidence = Math.round((result.habitability_probability || 0) * 100);
+  const planetColorStart = isHabitable ? "#4ecb8d" : "#e06b4a";
+  const planetColorMid = isHabitable ? "#22c55e" : "#c2410c";
+  const planetColorEnd = isHabitable ? "#15803d" : "#991b1b";
 
   return (
-    <div style={styles.resultWrapper}>
-      <div style={styles.visualGrid}>
-        {/* Left Column - Planet Sphere */}
-        <div style={styles.planetContainer}>
-          <svg style={styles.planetSvg} viewBox="0 0 200 200">
+    <div className="viz-card">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h4 className="viz-title">Planetary Transit Reconstruction</h4>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.65rem",
+            letterSpacing: "0.08em",
+            color: isHabitable ? "var(--color-confirmed)" : "var(--color-false)",
+            background: isHabitable ? "rgba(78, 203, 141, 0.1)" : "rgba(224, 107, 74, 0.1)",
+            padding: "3px 8px",
+            borderRadius: "4px",
+            border: `1px solid ${isHabitable ? "rgba(78, 203, 141, 0.3)" : "rgba(224, 107, 74, 0.3)"}`,
+          }}
+        >
+          {result.habitability_class}
+        </span>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+          gap: "1.5rem",
+          alignItems: "center",
+        }}
+      >
+        {/* Planet Sphere Visual */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <svg style={{ width: "100%", maxWidth: "180px", height: "auto" }} viewBox="0 0 200 200">
             <defs>
-              <radialGradient id="planet" cx="40%" cy="40%">
-                <stop offset="0%" stopColor={isHabitable ? "#4ade80" : "#ef4444"} />
-                <stop offset="70%" stopColor={isHabitable ? "#22c55e" : "#dc2626"} />
-                <stop offset="100%" stopColor={isHabitable ? "#16a34a" : "#991b1b"} />
+              <radialGradient id="planetGlow" cx="40%" cy="40%">
+                <stop offset="0%" stopColor={planetColorStart} />
+                <stop offset="70%" stopColor={planetColorMid} />
+                <stop offset="100%" stopColor={planetColorEnd} />
               </radialGradient>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+              <filter id="glowFilter">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
                 <feMerge>
                   <feMergeNode in="coloredBlur" />
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
             </defs>
-            
+
             {/* Atmosphere Layers */}
-            <circle cx="100" cy="100" r="85" fill="none" stroke={isHabitable ? "rgba(74, 222, 128, 0.2)" : "rgba(239, 68, 68, 0.2)"} strokeWidth="15" />
-            
-            {/* Planet */}
-            <circle cx="100" cy="100" r="65" fill="url(#planet)" filter="url(#glow)" />
-            
-            {/* Surface Details */}
-            <ellipse cx="110" cy="85" rx="40" ry="30" fill={isHabitable ? "rgba(34, 197, 94, 0.3)" : "rgba(185, 28, 28, 0.3)"} />
-            
-            {/* Orbit Ring */}
-            <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(99, 102, 241, 0.3)" strokeWidth="1" strokeDasharray="5,5" />
+            <circle
+              cx="100"
+              cy="100"
+              r="82"
+              fill="none"
+              stroke={isHabitable ? "rgba(78, 203, 141, 0.18)" : "rgba(224, 107, 74, 0.18)"}
+              strokeWidth="12"
+            />
+
+            {/* Planet Body */}
+            <circle cx="100" cy="100" r="64" fill="url(#planetGlow)" filter="url(#glowFilter)" />
+
+            {/* Surface Shading Detail */}
+            <ellipse
+              cx="108"
+              cy="88"
+              rx="38"
+              ry="28"
+              fill={isHabitable ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.25)"}
+            />
+
+            {/* Orbit Trace Ring */}
+            <circle
+              cx="100"
+              cy="100"
+              r="76"
+              fill="none"
+              stroke="rgba(212, 132, 74, 0.35)"
+              strokeWidth="1"
+              strokeDasharray="4,4"
+            />
           </svg>
         </div>
 
-        {/* Right Column - Metrics */}
-        <div style={styles.metricsColumn}>
-          <div style={styles.metricRow}>
-            <span style={styles.metricLabel}>Classification</span>
-            <span style={{...styles.metricValueBig, color: isHabitable ? "#10b981" : "#ef4444"}}>
-              {result.habitability_class}
+        {/* Metrics Column */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+          <div
+            style={{
+              padding: "0.75rem 0.9rem",
+              background: "rgba(255, 255, 255, 0.03)",
+              border: "1px solid rgba(212, 132, 74, 0.12)",
+              borderRadius: "8px",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.62rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "var(--text-muted)",
+              }}
+            >
+              Estimated Radius
             </span>
-          </div>
-          
-          <div style={styles.metricRow}>
-            <span style={styles.metricLabel}>Confidence</span>
-            <div style={styles.confidenceBar}>
-              <div style={{...styles.confidenceFill, width: `${confidence}%`, background: isHabitable ? "#10b981" : "#ef4444"}}></div>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "1.4rem",
+                fontWeight: 600,
+                color: "#f5f0e8",
+                marginTop: "2px",
+              }}
+            >
+              {Number(result.predicted_planet_radius || 0).toFixed(3)}
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--text-muted)", marginLeft: "4px" }}>
+                R⊕
+              </span>
             </div>
-            <span style={styles.confidenceText}>{confidence}%</span>
           </div>
 
-          <div style={styles.metricRow}>
-            <span style={styles.metricLabel}>Radius</span>
-            <span style={styles.metricValueBig}>{result.predicted_planet_radius.toFixed(2)} R⊕</span>
-          </div>
-
-          <div style={styles.metricRow}>
-            <span style={styles.metricLabel}>Probability</span>
-            <span style={styles.metricValueBig}>{(result.habitability_probability * 100).toFixed(1)}%</span>
+          <div
+            style={{
+              padding: "0.75rem 0.9rem",
+              background: "rgba(255, 255, 255, 0.03)",
+              border: "1px solid rgba(212, 132, 74, 0.12)",
+              borderRadius: "8px",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.62rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  color: "var(--text-muted)",
+                }}
+              >
+                Classification Confidence
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.72rem",
+                  color: isHabitable ? "var(--color-confirmed)" : "var(--color-false)",
+                  fontWeight: 600,
+                }}
+              >
+                {confidence}%
+              </span>
+            </div>
+            <div
+              style={{
+                height: "6px",
+                background: "rgba(255, 255, 255, 0.08)",
+                borderRadius: "99px",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  width: `${confidence}%`,
+                  height: "100%",
+                  background: isHabitable ? "var(--color-confirmed)" : "var(--color-false)",
+                  transition: "width 0.8s ease-out",
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom - Analysis Tags */}
-      <div style={styles.tagsContainer}>
-        {isHabitable && (
+      {/* Analysis Status Badges */}
+      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", paddingTop: "0.5rem" }}>
+        {isHabitable ? (
           <>
-            <span style={styles.tag}>✓ Potentially Habitable</span>
-            <span style={styles.tag}>Earth-like</span>
-            <span style={styles.tag}>🌍 Life Potential</span>
+            <span
+              style={{
+                padding: "4px 10px",
+                borderRadius: "20px",
+                border: "1px solid rgba(78, 203, 141, 0.35)",
+                background: "rgba(78, 203, 141, 0.08)",
+                fontSize: "0.72rem",
+                color: "var(--color-confirmed)",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              ✓ Verified Planet Candidate
+            </span>
+            <span
+              style={{
+                padding: "4px 10px",
+                borderRadius: "20px",
+                border: "1px solid rgba(212, 132, 74, 0.35)",
+                background: "rgba(212, 132, 74, 0.08)",
+                fontSize: "0.72rem",
+                color: "var(--accent-light)",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              Kepler Optical Signal
+            </span>
           </>
-        )}
-        {!isHabitable && (
+        ) : (
           <>
-            <span style={{...styles.tag, borderColor: "#ef4444", color: "#ef4444"}}>⚠ Low Probability</span>
-            <span style={{...styles.tag, borderColor: "#ef4444", color: "#ef4444"}}>False Positive</span>
+            <span
+              style={{
+                padding: "4px 10px",
+                borderRadius: "20px",
+                border: "1px solid rgba(224, 107, 74, 0.35)",
+                background: "rgba(224, 107, 74, 0.08)",
+                fontSize: "0.72rem",
+                color: "var(--color-false)",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              ⚠ False Positive Signal
+            </span>
+            <span
+              style={{
+                padding: "4px 10px",
+                borderRadius: "20px",
+                border: "1px solid rgba(212, 132, 74, 0.25)",
+                background: "rgba(212, 132, 74, 0.05)",
+                fontSize: "0.72rem",
+                color: "var(--text-muted)",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              Non-Planetary Transit
+            </span>
           </>
         )}
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  centerContent: {
-    textAlign: "center",
-  },
-
-  spinner: {
-    width: "50px",
-    height: "50px",
-    border: "3px solid rgba(99, 102, 241, 0.2)",
-    borderTopColor: "#58a6ff",
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
-    margin: "0 auto 1rem",
-  },
-
-  loadingText: {
-    color: "#8b949e",
-    fontSize: "0.95rem",
-  },
-
-  emptyIcon: {
-    fontSize: "3rem",
-    marginBottom: "1rem",
-  },
-
-  emptyText: {
-    color: "#8b949e",
-    fontSize: "1rem",
-  },
-
-  resultWrapper: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    gap: "1.5rem",
-  },
-
-  visualGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "2rem",
-    alignItems: "center",
-  },
-
-  planetContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  planetSvg: {
-    width: "100%",
-    maxWidth: "200px",
-    height: "auto",
-  },
-
-  metricsColumn: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1.25rem",
-  },
-
-  metricRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "1rem",
-    background: "rgba(99, 102, 241, 0.08)",
-    borderRadius: "8px",
-    border: "1px solid rgba(99, 102, 241, 0.12)",
-  },
-
-  metricLabel: {
-    fontSize: "0.85rem",
-    color: "#8b949e",
-    fontWeight: 600,
-  },
-
-  metricValueBig: {
-    fontSize: "1.4rem",
-    fontWeight: 700,
-    color: "#58a6ff",
-  },
-
-  confidenceBar: {
-    flex: 1,
-    height: "8px",
-    background: "rgba(99, 102, 241, 0.15)",
-    borderRadius: "4px",
-    overflow: "hidden",
-    margin: "0 1rem",
-  },
-
-  confidenceFill: {
-    height: "100%",
-    transition: "width 1s ease-out",
-  },
-
-  confidenceText: {
-    fontSize: "0.9rem",
-    fontWeight: 600,
-    color: "#58a6ff",
-    minWidth: "50px",
-    textAlign: "right",
-  },
-
-  tagsContainer: {
-    display: "flex",
-    gap: "0.75rem",
-    justifyContent: "center",
-    flexWrap: "wrap",
-  },
-
-  tag: {
-    padding: "0.5rem 1rem",
-    border: "1px solid rgba(16, 185, 129, 0.3)",
-    borderRadius: "20px",
-    fontSize: "0.8rem",
-    color: "#10b981",
-    fontWeight: 600,
-  },
-
-  keyframes: `
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  `,
-};
